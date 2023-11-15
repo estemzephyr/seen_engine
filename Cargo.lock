@@ -1009,6 +1009,8 @@ dependencies = [
  "async-trait",
  "futures-util",
  "mongodb",
+ "serde",
+ "serde_derive",
  "tokio",
 ]
 

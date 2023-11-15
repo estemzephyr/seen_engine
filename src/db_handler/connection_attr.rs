@@ -6,19 +6,17 @@ pub enum DatabaseType {
     Postgres,
     Mongodb,
 }
-pub struct SeenConnection<T> {
+pub struct SeenConnection {
     pub(crate) username:String,
     pub(crate) password:String,
     pub(crate) dbtype:DatabaseType,
-    pub(crate) connection:T
 }
-impl <T>SeenConnection<T> {
-    pub async fn new_connection(self) -> SeenConnection<T>{
+impl SeenConnection {
+    pub async fn new_connection(self) -> SeenConnection{
         SeenConnection{
             username: self.username,
             password: self.password,
             dbtype: self.dbtype,
-            connection: self.connection,
         }
     }
     pub async fn perform_database_task(self) {
@@ -31,7 +29,6 @@ impl <T>SeenConnection<T> {
                     password: self.password,
                 };
                 MongoDbConnection::get_data_from_mongodb(&mongodb).await.expect("TODO: panic message");
-
             }
         }
     }
