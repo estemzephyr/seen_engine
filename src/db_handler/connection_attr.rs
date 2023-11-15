@@ -1,57 +1,38 @@
-use crate::db_handler::mongo_db::MongoDbConnection;
-use crate::db_handler::my_sql::MySqlConnection;
-use crate::db_handler::postgres::Postgres;
-
-trait DatabaseConnection {
-    fn connect(&self);
+use crate::db_handler::mongo_db::*;
+use crate::db_handler::my_sql::*;
+use crate::db_handler::postgres::*;
+pub enum DatabaseType {
+    Mysql,
+    Postgres,
+    Mongodb,
 }
-
-//MySql Connection
-impl DatabaseConnection for MySqlConnection {
-    fn connect(&self) {
-        let mysql = MySqlConnection {
-            username: "".to_string(),
-        };
-
-        MySqlConnection::connect_mysql_db(mysql);
+pub struct SeenConnection<T> {
+    pub(crate) username:String,
+    pub(crate) password:String,
+    pub(crate) dbtype:DatabaseType,
+    pub(crate) connection:T
+}
+impl <T>SeenConnection<T> {
+    pub async fn new_connection(self) -> SeenConnection<T>{
+        SeenConnection{
+            username: self.username,
+            password: self.password,
+            dbtype: self.dbtype,
+            connection: self.connection,
+        }
     }
-}
+    pub async fn perform_database_task(self) {
+        match self.dbtype{
+            DatabaseType::Mysql => {}
+            DatabaseType::Postgres => {}
+            DatabaseType::Mongodb => {
+                let mongodb = MongoDbConnection{
+                    username: self.username,
+                    password: self.password,
+                };
+                MongoDbConnection::get_data_from_mongodb(&mongodb).await.expect("TODO: panic message");
 
-impl DatabaseConnection for Postgres {
-    fn connect(&self) {
-        let postgre = Postgres {
-            username: "".to_string(),
-        };
-
-        Postgres::connect_postgres(postgre);
-        println!("U Successfully Connected Postgres");
-    }
-}
-
-impl DatabaseConnection for MongoDbConnection {
-    async fn connect(&self) {
-        let mongo = MongoDbConnection {
-            username: "".to_string(),
-            password: "".to_string(),
-        };
-
-        MongoDbConnection::create_new_mongodb_conn(mongo).await.expect("TODO: panic message");
-    }
-}
-
-struct DatabaseHandler<T: DatabaseConnection> {
-    connection: T,
-}
-
-impl<T: DatabaseConnection> DatabaseHandler<T> {
-    fn new(connection: T) -> Self {
-        DatabaseHandler { connection }
-    }
-
-    async fn perform_database_task(&self) {
-        self.connection.connect();
-        match self.connection {
-            _ => {}
+            }
         }
     }
 }

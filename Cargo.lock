@@ -1006,6 +1006,8 @@ dependencies = [
 name = "seen"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
+ "futures-util",
  "mongodb",
  "tokio",
 ]
