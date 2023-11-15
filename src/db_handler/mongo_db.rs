@@ -5,11 +5,11 @@ use mongodb::{
 };
 
 pub struct MongoDbConnection{
-    username:String,
-    password:String,
+    pub(crate) username:String,
+    pub(crate) password:String,
 }
 impl MongoDbConnection{
-pub async fn create_new_mongodb_conn(&self) -> Result<Client, MongoError> {
+pub async fn create_new_mongodb_conn(self) -> Result<Client, MongoError> {
     let db_url = format!("mongodb+srv://{}:{}@cluster0.cy2q83g.mongodb.net/?retryWrites=true&w=majority", self.username, self.password);
     let mut client_options = ClientOptions::parse(db_url)
         .await?;

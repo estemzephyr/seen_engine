@@ -4,32 +4,41 @@ use crate::db_handler::postgres::Postgres;
 
 trait DatabaseConnection {
     fn connect(&self);
-    fn get_data_from_db(){
-
-    }
 }
+
 //MySql Connection
 impl DatabaseConnection for MySqlConnection {
     fn connect(&self) {
-        println!("MySQL bağlantısı kuruldu.");
+        let mysql = MySqlConnection {
+            username: "".to_string(),
+        };
+
+        MySqlConnection::connect_mysql_db(mysql);
     }
 }
 
 impl DatabaseConnection for Postgres {
     fn connect(&self) {
-        Postgres::connect_postgres();
+        let postgre = Postgres {
+            username: "".to_string(),
+        };
+
+        Postgres::connect_postgres(postgre);
         println!("U Successfully Connected Postgres");
     }
 }
 
-// MongoDB bağlantısı
 impl DatabaseConnection for MongoDbConnection {
-    fn connect(&self) {
-        println!("MongoDB bağlantısı kuruldu.");
+    async fn connect(&self) {
+        let mongo = MongoDbConnection {
+            username: "".to_string(),
+            password: "".to_string(),
+        };
+
+        MongoDbConnection::create_new_mongodb_conn(mongo).await.expect("TODO: panic message");
     }
 }
 
-// Uygulama bileşeni
 struct DatabaseHandler<T: DatabaseConnection> {
     connection: T,
 }
@@ -39,9 +48,10 @@ impl<T: DatabaseConnection> DatabaseHandler<T> {
         DatabaseHandler { connection }
     }
 
-    fn perform_database_task(&self) {
-        // Bağlantı kullanılarak veritabanı işlemleri gerçekleştirilir
+    async fn perform_database_task(&self) {
         self.connection.connect();
-        // Diğer işlemler...
+        match self.connection {
+            _ => {}
+        }
     }
 }

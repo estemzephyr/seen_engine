@@ -1,7 +1,7 @@
 pub struct Postgres{
-    username:String,
+    pub(crate) username:String,
 }
 impl Postgres{
-pub fn connect_postgres(){
+pub fn connect_postgres(self){
     
 }}

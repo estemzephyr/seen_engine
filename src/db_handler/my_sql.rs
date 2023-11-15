@@ -1,9 +1,9 @@
 pub struct MySqlConnection{
-    username:String,
+    pub(crate) username:String,
 }
 
 impl MySqlConnection {
-    pub fn connect_mysql_db(&self){
+    pub fn connect_mysql_db(self){
 
     }
 }
