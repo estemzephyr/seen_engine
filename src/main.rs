@@ -2,6 +2,7 @@ use crate::db_handler::connection_attr::{DatabaseType, SeenConnection};
 
 mod db_handler;
 mod data_control;
+mod IDATA;
 
 #[tokio::main]
 async fn main() {

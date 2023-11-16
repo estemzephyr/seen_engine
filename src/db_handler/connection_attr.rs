@@ -1,6 +1,9 @@
 use crate::db_handler::mongo_db::*;
 use crate::db_handler::my_sql::*;
 use crate::db_handler::postgres::*;
+use crate::IDATA::IData::{IData};
+use mongodb::bson::oid::ObjectId;
+
 pub enum DatabaseType {
     Mysql,
     Postgres,
@@ -20,6 +23,7 @@ impl SeenConnection {
         }
     }
     pub async fn perform_database_task(self) {
+        let def_data = IData::default();
         match self.dbtype{
             DatabaseType::Mysql => {}
             DatabaseType::Postgres => {}
@@ -28,7 +32,7 @@ impl SeenConnection {
                     username: self.username,
                     password: self.password,
                 };
-                MongoDbConnection::get_data_from_mongodb(&mongodb).await.expect("TODO: panic message");
+                MongoDbConnection::get_data_from_mongodb(&mongodb,def_data).await.expect("TODO: panic message");
             }
         }
     }
