@@ -10,6 +10,6 @@ async fn main() {
         password: "00fener00".to_string(),
         dbtype: DatabaseType::Mongodb,
     };
-    let conn = SeenConnection::new_connection(conn_mongodb).await;
+    let conn = SeenConnection::new_connection(&conn_mongodb).await;
     conn.perform_database_task().await;
 }

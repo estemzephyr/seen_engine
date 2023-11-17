@@ -6,8 +6,7 @@ pub struct IData {
     pub(crate) value: String,
 }
 impl IData {
-    //Constructor to use without "new"
-    //Dependency injection
+    //Constructor
     pub fn default() -> IData {
         IData {
             id: 0,
