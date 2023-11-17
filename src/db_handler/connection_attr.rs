@@ -27,7 +27,7 @@ impl SeenConnection {
                     username: self.username.clone(),
                     password: self.password.clone(),
                 };
-                let datas = MongoDbConnection::get_data_from_mongodb(mongodb).await.expect("TODO: panic message");
+                let datas = MongoDbConnection::get_data_from_mongodb(&mongodb).await.expect("TODO: panic message");
                 println!("{:?}",datas);
             }
         }
