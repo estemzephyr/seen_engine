@@ -1,8 +1,7 @@
 use crate::db_handler::connection_attr::{DatabaseType, SeenConnection};
 
 mod db_handler;
-mod data_control;
-mod IDATA;
+mod IData;
 
 #[tokio::main]
 async fn main() {
@@ -13,5 +12,4 @@ async fn main() {
     };
     let conn = SeenConnection::new_connection(conn_mongodb).await;
     conn.perform_database_task().await;
-
 }

@@ -6,7 +6,7 @@ use mongodb::error::Error;
 use mongodb::options::FindOptions;
 use serde_derive::{Deserialize, Serialize};
 use crate::db_handler::errors::IError;
-use crate::IDATA::IData::{IData};
+use crate::IData::IData::{IData};
 
 #[derive(Deserialize, Serialize)]
 pub struct MongoDbConnection {
@@ -19,9 +19,8 @@ pub fn parse_string(value: &str) -> Result<i16, IError> {
 }
 
 impl MongoDbConnection {
-    pub async fn create_new_mongodb_conn() -> Result<Client, MongoError> {
-        let db_url =
-            ("mongodb+srv://yusufayd2307:00fener00@cluster0.cy2q83g.mongodb.net/?retryWrites=true&w=majority")
+    pub async fn create_new_mongodb_conn(self) -> Result<Client, MongoError> {
+        let db_url =format!("mongodb+srv://{}:{}@cluster0.cy2q83g.mongodb.net/?retryWrites=true&w=majority",self.username,self.password)
                 .to_string();
         let mut client_options = ClientOptions::parse(db_url)
             .await?;
@@ -33,22 +32,28 @@ impl MongoDbConnection {
     }
 
 
-    pub async fn get_data_from_mongodb(&self, mut data: IData) -> Result<IData, IError> {
+    pub async fn get_data_from_mongodb(self) -> Result<Vec<IData>, IError> {
         // Defined Static User for testing
-        let conn = MongoDbConnection::create_new_mongodb_conn().await?;
+        let conn = MongoDbConnection::create_new_mongodb_conn(self).await?;
         let collection: Collection<Document> = conn.database("mydb").collection("mycoll");
 
         // Filter by item
         let filter = doc! {};
         let find_options = FindOptions::builder().build();
         let mut cursor = collection.find(filter, find_options).await?;
+        let mut id_counter=0;
+        let mut data_vec = IData::create_new_data_vec();
         // Iterate through the results
         while let Some(result) = cursor.next().await {
             match result {
-                Ok(value) => {
-                    data.id = value.get("_id").unwrap().as_i32().unwrap_or_default() as i16;
-                    data.name = value.get("name").unwrap().to_string();
-                    data.i_value = value.get("value").unwrap().to_string();
+                Ok(value_doc) => {
+                    let data = IData {
+                        id : id_counter,
+                        name :value_doc.get("name").unwrap().to_string(),
+                        value : value_doc.get("value").unwrap().to_string(),
+                    };
+                    id_counter += 1;
+                    data_vec.push(data);
                 }
                 Err(err) => {
                     eprintln!("Error retrieving document: {}", err);
@@ -56,8 +61,7 @@ impl MongoDbConnection {
                 }
             }
         }
-        println!("{:?}", &data);
-        Ok(data)
+        Ok(data_vec)
     }
 }
 
