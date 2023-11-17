@@ -36,7 +36,7 @@ impl MongoDbConnection {
                     return Ok(valid_client);
                 }
                 Err(err) => {
-                    eprintln!("Error opening MongoDB connection (Attempt {}/{}): {}", attempt, MAX_RETRIES, err);
+                    format!("Error opening MongoDB connection (Attempt {}/{}): {}", attempt, MAX_RETRIES, err);
                 }
             }
             // Sleep for the specified interval before the next attempt
