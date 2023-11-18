@@ -2,6 +2,8 @@ use crate::db_handler::connection_attr::{DatabaseType, SeenConnection};
 
 mod db_handler;
 mod IData;
+mod sharding_engine;
+pub mod errors;
 
 #[tokio::main]
 async fn main() {

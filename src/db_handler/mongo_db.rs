@@ -8,7 +8,7 @@ use mongodb::options::FindOptions;
 use serde_derive::{Deserialize, Serialize};
 use tokio::time;
 use tokio::time::sleep;
-use crate::db_handler::errors::IError;
+use crate::errors::IError;
 use crate::IData::IData::{IData};
 
 #[derive(Deserialize, Serialize)]
