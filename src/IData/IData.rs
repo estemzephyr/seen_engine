@@ -15,11 +15,12 @@ impl IData {
         }
 
     }
+    // Setting the values for data implements self , not referring bcz value will drop after using
     pub fn new_data(self) -> Result<IData, Error> {
         let d = IData {
-            id: self.id.clone(),
-            name: self.name.clone(),
-            value: self.value.clone(),
+            id: self.id,
+            name: self.name,
+            value: self.value,
         };
         Ok(d)
     }
