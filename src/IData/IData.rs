@@ -1,4 +1,6 @@
 use std::fmt::Error;
+use std::str::Chars;
+
 #[derive(Clone, Debug)]
 pub struct IData {
     pub(crate) id: i16,
@@ -27,7 +29,7 @@ impl IData {
     pub fn get_data(self) -> IData {
         self
     }
-    pub fn create_new_data_vec()->Vec<IData>{
+    pub fn create_new_data_vec(x: &IData) ->Vec<IData>{
         let mut vec_new = vec![];
         vec_new
     }

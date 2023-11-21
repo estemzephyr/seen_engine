@@ -1,5 +1,6 @@
 use std::str::FromStr;
 use std::time::Duration;
+use futures_util::future::ok;
 use futures_util::StreamExt;
 use mongodb::{options::{ClientOptions, ServerApi, ServerApiVersion}, Client, error::Error as MongoError, Collection, bson};
 use mongodb::bson::{doc, Document};
@@ -61,7 +62,7 @@ impl MongoDbConnection {
     }
 
 
-    pub async fn get_data_from_mongodb(&self) -> Result<Vec<IData>, IError> {
+    pub async fn get_data_from_mongodb(&self) -> Result<IData, IError> {
         let conn = MongoDbConnection::establish_connection(&self).await?;
         let collection: Collection<Document> = conn.database("mydb").collection("mycoll");
         // Filter by item
@@ -69,18 +70,17 @@ impl MongoDbConnection {
         let find_options = FindOptions::builder().build();
         let mut cursor = collection.find(filter, find_options).await?;
         let mut id_counter = 0;
-        let mut data_vec = IData::create_new_data_vec();
+        let mut data = IData::default();
         // Iterate through the results
         while let Some(result) = cursor.next().await {
             match result {
                 Ok(value_doc) => {
-                    let data = IData {
+                    data = IData {
                         id: id_counter,
                         name: value_doc.get("name").unwrap().to_string(),
                         value: value_doc.get("value").unwrap().to_string(),
                     };
                     id_counter += 1;
-                    data_vec.push(data);
                 }
                 Err(err) => {
                     println!("Error retrieving document: {}", err);
@@ -88,7 +88,7 @@ impl MongoDbConnection {
                 }
             }
         }
-        Ok(data_vec)
+        Ok(data)
     }
 }
 
