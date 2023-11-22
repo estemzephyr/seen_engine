@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 use std::sync::Mutex;
-use crate::IData::IData::IData;
+use crate::IDataObj::IData::IData;
 
 lazy_static! {
     static ref ID_COUNTER: Mutex<i32> = Mutex::new(0);

@@ -1,16 +1,16 @@
-use crate::db_handler::connection_attr::{DatabaseType, SeenConnection};
+use crate::db_handler::connection_attr::{IDATABASE, SeenConnection};
 
 mod db_handler;
-mod IData;
+mod IDataObj;
 mod sharding_engine;
-pub mod errors;
+mod ErrorManager;
 
 #[tokio::main]
 async fn main() {
     let conn_mongodb = SeenConnection{
         username: "yusufayd2307".to_string(),
         password: "00fener00".to_string(),
-        dbtype: DatabaseType::Mongodb,
+        dbtype: IDATABASE::Mongodb,
     };
     let conn = SeenConnection::new_connection(&conn_mongodb).await;
     conn.perform_database_task().await;

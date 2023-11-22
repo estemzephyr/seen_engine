@@ -3,7 +3,7 @@ use crate::sharding_engine::Ishard::IShard;
 use crate::sharding_engine::IShardController::ControlProtocol;
 
 #[derive(Clone)]
-pub enum DatabaseType {
+pub enum IDATABASE {
     Mysql,
     Postgres,
     Mongodb,
@@ -11,7 +11,7 @@ pub enum DatabaseType {
 pub struct SeenConnection {
     pub(crate) username:String,
     pub(crate) password:String,
-    pub(crate) dbtype:DatabaseType,
+    pub(crate) dbtype:IDATABASE,
 }
 impl SeenConnection {
     pub async fn new_connection(&self) -> SeenConnection{
@@ -23,9 +23,9 @@ impl SeenConnection {
     }
     pub async fn perform_database_task(&self) {
         match self.dbtype{
-            DatabaseType::Mysql => {}
-            DatabaseType::Postgres => {}
-            DatabaseType::Mongodb => {
+            IDATABASE::Mysql => {}
+            IDATABASE::Postgres => {}
+            IDATABASE::Mongodb => {
                 let mongodb = MongoDbConnection{
                     username: self.username.clone(),
                     password: self.password.clone(),
@@ -36,13 +36,13 @@ impl SeenConnection {
                     id: 0,
                     ivalue: Vec::new(),
                 };
-                let data_vec =vec![datas.clone()];
                 let mut shard = IShard::new_shard(def_shard).await;
-                for idata in data_vec{
-                shard.ivalue.clone().push(Some(Box::new(idata)));
-                let algorithm = ControlProtocol::list_shard_with_algorithm(ControlProtocol::Alphabetic,shard.clone());
-                //println!("{:?}",datas);
-            }}
+                shard.ivalue.push(Some(Box::new(datas)));
+                let algorithm = ControlProtocol::list_shard_with_algorithm(
+                    ControlProtocol::Alphabetic,
+                    shard.clone(),
+                );
+            }
         }
     }
 }

@@ -1,6 +1,3 @@
-use std::fmt::Error;
-use std::str::Chars;
-
 #[derive(Clone, Debug)]
 pub struct IData {
     pub(crate) id: i16,
@@ -18,19 +15,12 @@ impl IData {
 
     }
     // Setting the values for data implements self , not referring bcz value will drop after using
-    pub fn new_data(self) -> Result<IData, Error> {
-        let d = IData {
-            id: self.id,
-            name: self.name,
-            value: self.value,
-        };
-        Ok(d)
-    }
-    pub fn get_data(self) -> IData {
+    pub fn get_data_on_vec(self) -> IData {
         self
     }
-    pub fn create_new_data_vec(x: &IData) ->Vec<IData>{
+    pub fn create_new_data_vec(x:IData) ->Vec<IData>{
         let mut vec_new = vec![];
+        vec_new.push(x);
         vec_new
     }
 }
