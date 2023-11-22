@@ -1,4 +1,6 @@
 use crate::db_handler::mongo_db::*;
+use crate::ErrorManager::errors::IError;
+use crate::IDataObj::IData::IData;
 use crate::sharding_engine::Ishard::IShard;
 use crate::sharding_engine::IShardController::ControlProtocol;
 
@@ -21,28 +23,22 @@ impl SeenConnection {
             dbtype: self.dbtype.clone(),
         }
     }
-    pub async fn perform_database_task(&self) {
+    pub async fn perform_database_task(&self) -> Result<IData, IError> {
+        let mut data = IData::default();
         match self.dbtype{
             IDATABASE::Mysql => {}
             IDATABASE::Postgres => {}
             IDATABASE::Mongodb => {
                 let mongodb = MongoDbConnection{
+                    //Cloning for MultiThread Works
                     username: self.username.clone(),
                     password: self.password.clone(),
                 };
-                let datas = MongoDbConnection::get_data_from_mongodb(&mongodb).await.expect("TODO: panic message");
-                let def_shard = IShard{
-                    key: "some".to_string(),
-                    id: 0,
-                    ivalue: Vec::new(),
-                };
-                let mut shard = IShard::new_shard(def_shard).await;
-                shard.ivalue.push(Some(Box::new(datas)));
-                let algorithm = ControlProtocol::list_shard_with_algorithm(
-                    ControlProtocol::Alphabetic,
-                    shard.clone(),
-                );
+               data = MongoDbConnection::get_data_from_mongodb(&mongodb).await.expect("TODO: panic message");
+
             }
         }
+        println!("{:?}",data);
+        Ok(data)
     }
 }

@@ -1,4 +1,4 @@
 pub mod my_sql;
 pub mod postgres;
-pub mod connection_attr;
+pub mod DB_Manager;
 pub mod mongo_db;

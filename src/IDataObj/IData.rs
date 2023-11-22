@@ -15,10 +15,11 @@ impl IData {
 
     }
     // Setting the values for data implements self , not referring bcz value will drop after using
-    pub fn get_data_on_vec(self) -> IData {
-        self
+    pub fn create_new_data(x:IData) -> IData {
+        let life_cycle_data=IData::create_new_data(x);
+        life_cycle_data
     }
-    pub fn create_new_data_vec(x:IData) ->Vec<IData>{
+    fn create_new_data_vec(x:IData) ->Vec<IData>{
         let mut vec_new = vec![];
         vec_new.push(x);
         vec_new

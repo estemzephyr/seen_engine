@@ -12,7 +12,7 @@ impl ControlProtocol {
         ControlProtocol::Default
     }
 
-    pub fn list_shard_with_algorithm(self, mut data: IShard<IData>) /*-> Vec<Option<Box<IDataObj>>> */{
+    pub fn list_shard_with_algorithm(self, mut data: IShard) /*-> Vec<Option<Box<IDataObj>>> */{
         match self {
             ControlProtocol::Alphabetic => {
                 println!("{:?}",data.ivalue);

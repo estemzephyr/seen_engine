@@ -15,6 +15,13 @@ pub struct MongoDbConnection {
     pub(crate) password: String,
 }
 impl MongoDbConnection {
+    //Constructor Block
+    fn default() -> MongoDbConnection{
+        MongoDbConnection{
+            username: String::new(),
+            password: String::new(),
+        }
+    }
     async fn create_new_mongodb_conn(&self) -> Result<Client, MongoError> {
         let db_url = format!("mongodb+srv://{}:{}@cluster0.cy2q83g.mongodb.net/?retryWrites=true&w=majority",self.username,self.password).to_string();
         let mut client_options = ClientOptions::parse(db_url).await?;
@@ -72,12 +79,14 @@ impl MongoDbConnection {
         while let Some(result) = cursor.next().await {
             match result {
                 Ok(value_doc) => {
+                    //Fields
                     data = IData {
                         id: id_counter,
                         name: value_doc.get("name").unwrap().to_string(),
                         value: value_doc.get("value").unwrap().to_string(),
                     };
                     id_counter += 1;
+
                 }
                 Err(err) => {
                     println!("Error retrieving document: {}", err);

@@ -1,4 +1,4 @@
-use crate::db_handler::connection_attr::{IDATABASE, SeenConnection};
+use crate::db_handler::DB_Manager::{IDATABASE, SeenConnection};
 
 mod db_handler;
 mod IDataObj;

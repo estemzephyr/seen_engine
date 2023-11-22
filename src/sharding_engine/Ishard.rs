@@ -7,14 +7,14 @@ lazy_static! {
 }
 //Delete After Test
 #[derive(Clone)]
-pub struct IShard<T>{
+pub struct IShard{
     pub(crate) key:String,
     pub(crate) id:i32,
-    pub(crate) ivalue:Vec<Option<Box<T>>> // Here using box because we need to keep values on heap
+    pub(crate) ivalue:Vec<IData>,
 }
 
-impl<T> IShard<T> {
-    pub fn default() -> IShard<IData>{
+impl IShard {
+    pub fn default() -> IShard {
         IShard{
             key: String::new(),
             id: 0,
@@ -27,10 +27,7 @@ impl<T> IShard<T> {
         *counter += 1;
         IShard {key: self.key, id:self.id, ivalue: Vec::new() }
     }
-    pub fn get_shards(self) -> IShard<T> {
+    pub fn get_shards(self) -> IShard {
         self
-    }
-    pub fn decode_shard(self) -> Vec<Option<Box<T>>> {
-        self.ivalue
     }
 }
