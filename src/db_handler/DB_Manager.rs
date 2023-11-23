@@ -23,7 +23,7 @@ impl SeenConnection {
             dbtype: self.dbtype.clone(),
         }
     }
-    pub async fn perform_database_task(&self) -> Result<IData, IError> {
+    pub async fn perform_database_task(&self) -> Result<Vec<IData>, IError> {
         let mut data = IData::create_new_data_vec();
         match self.dbtype {
             IDATABASE::Mysql => {
@@ -44,12 +44,13 @@ impl SeenConnection {
                 };
             }
         }
-
-        let unwrapped_data = IData::get_datas_on_vec(data.clone()).await;
-        for datas in data {
-            println!("{:?}", datas);
+        //Data Unwrapping for Tests
+        // let unwrapped_data = IData::get_datas_on_vec(data.clone()).await;
+        for datas in &data {
+            //Process Shards Here
+            println!("{:?}",datas);
         }
 
-        Ok(unwrapped_data)
+        Ok(data)
     }
 }
