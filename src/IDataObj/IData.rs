@@ -4,6 +4,7 @@ pub struct IData {
     pub(crate) name: String,
     pub(crate) value: String,
 }
+
 impl IData {
     //Constructor
     pub fn default() -> IData {
@@ -12,15 +13,17 @@ impl IData {
             name: "".to_string(),
             value: "".to_string(),
         }
+    }
+    pub fn create_new_data_vec() -> Vec<IData> {
+        let mut vec_new:Vec<IData> = vec![];
+        vec_new
 
     }
-    pub fn handle_data(self){
-        let vec_data = IData::create_new_data_vec(self);
-        vec_data.to_vec();
-    }
-    fn create_new_data_vec(x:IData) ->Vec<IData>{
-        let mut vec_new = vec![];
-        vec_new.push(x);
-        vec_new
+    pub async fn get_datas_on_vec(x:Vec<IData>) -> IData{
+        let mut data = IData::default();
+        for value in x{
+            data = value;
+        }
+        data
     }
 }

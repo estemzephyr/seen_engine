@@ -24,20 +24,32 @@ impl SeenConnection {
         }
     }
     pub async fn perform_database_task(&self) -> Result<IData, IError> {
-        let mut data = IData::default();
+        let mut data = IData::create_new_data_vec();
         match self.dbtype {
-            IDATABASE::Mysql => {}
-            IDATABASE::Postgres => {}
+            IDATABASE::Mysql => {
+                // MySQL ile ilgili işlemleri buraya ekleyin
+            }
+            IDATABASE::Postgres => {
+                // Postgres ile ilgili işlemleri buraya ekleyin
+            }
             IDATABASE::Mongodb => {
                 let mongodb = MongoDbConnection {
-                    //Cloning for MultiThread Works
+                    // Cloning for MultiThread Works
                     username: self.username.clone(),
                     password: self.password.clone(),
                 };
-                data = MongoDbConnection::get_data_from_mongodb(&mongodb).await.expect("selam");
+                data = match MongoDbConnection::get_data_from_mongodb(&mongodb).await {
+                    Ok(result) => result,
+                    Err(err) => return Err(err.into()), // Hata durumunda geri dön
+                };
             }
         }
-        println!("{:?}", data);
-        Ok(data)
+
+        let unwrapped_data = IData::get_datas_on_vec(data.clone()).await;
+        for datas in data {
+            println!("{:?}", datas);
+        }
+
+        Ok(unwrapped_data)
     }
 }

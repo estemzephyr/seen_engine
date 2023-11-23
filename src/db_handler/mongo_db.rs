@@ -68,7 +68,7 @@ impl MongoDbConnection {
 
 
 
-    pub async fn get_data_from_mongodb(&self) -> Result<IData, IError> {
+    pub async fn get_data_from_mongodb(&self) -> Result<Vec<IData>, IError> {
         let conn = MongoDbConnection::establish_connection(&self).await?;
         let collection: Collection<Document> = conn.database("mydb").collection("mycoll");
         // Filter by item
@@ -76,14 +76,15 @@ impl MongoDbConnection {
         let find_options = FindOptions::builder().build();
         let mut cursor = collection.find(filter, find_options).await?;
         let mut id_counter:i16 = 0;
-        let mut data = IData::default();
+        let mut data = IData::create_new_data_vec();
+
         // Iterate through the results
         while let Some(result) = cursor.next().await {
             match result {
                 Ok(value_doc) => {
                     match process_document(id_counter, value_doc).await {
                         Ok(processed_data) => {
-                            data = processed_data.clone();
+                            data.push(processed_data);
                         }
                         Err(err) => {
                             println!("Error processing document: {:?}", err);
@@ -94,11 +95,11 @@ impl MongoDbConnection {
                     println!("Error retrieving document: {:?}", err);
                 }
             }
+            id_counter+=1;
         }
         Ok(data)
     }
 }
-
 async fn process_document(mut id_counter: i16, value_doc: Document) -> Result<IData, IError> {
     // U can Customize here for our data ( match db indexes for IDATA)
     // Add IDATA.rs for indexes
