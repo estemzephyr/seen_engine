@@ -14,5 +14,7 @@ async fn main() {
     };
     let conn = SeenConnection::new_connection(&conn_mongodb).await;
     let comed_datas = conn.perform_database_task().await.expect("TODO: panic message");
-    println!("{:?}",comed_datas);
+    for data in comed_datas{
+        println!("{:?}",data);
+    }
 }
