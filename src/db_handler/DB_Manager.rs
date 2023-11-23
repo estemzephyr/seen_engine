@@ -46,10 +46,9 @@ impl SeenConnection {
         }
         //Data Unwrapping for Tests
         // let unwrapped_data = IData::get_datas_on_vec(data.clone()).await;
-        for datas in &data {
-            //Process Shards Here
+        /*for datas in &data {
             println!("{:?}",datas);
-        }
+        }*/
 
         Ok(data)
     }
