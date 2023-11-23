@@ -1,5 +1,6 @@
 use std::str::FromStr;
 use std::time::Duration;
+use futures_util::future::ok;
 use futures_util::StreamExt;
 use mongodb::{options::{ClientOptions, ServerApi, ServerApiVersion}, Client, error::Error as MongoError, Collection, bson};
 use mongodb::bson::{doc, Document};
@@ -66,6 +67,7 @@ impl MongoDbConnection {
     }
 
 
+
     pub async fn get_data_from_mongodb(&self) -> Result<IData, IError> {
         let conn = MongoDbConnection::establish_connection(&self).await?;
         let collection: Collection<Document> = conn.database("mydb").collection("mycoll");
@@ -73,24 +75,23 @@ impl MongoDbConnection {
         let filter = doc! {};
         let find_options = FindOptions::builder().build();
         let mut cursor = collection.find(filter, find_options).await?;
-        let mut id_counter = 0;
+        let mut id_counter:i16 = 0;
         let mut data = IData::default();
         // Iterate through the results
         while let Some(result) = cursor.next().await {
             match result {
                 Ok(value_doc) => {
-                    //Fields
-                    data = IData {
-                        id: id_counter,
-                        name: value_doc.get("name").unwrap().to_string(),
-                        value: value_doc.get("value").unwrap().to_string(),
-                    };
-                    id_counter += 1;
-
+                    match process_document(id_counter, value_doc).await {
+                        Ok(processed_data) => {
+                            data = processed_data.clone();
+                        }
+                        Err(err) => {
+                            println!("Error processing document: {:?}", err);
+                        }
+                    }
                 }
                 Err(err) => {
-                    println!("Error retrieving document: {}", err);
-
+                    println!("Error retrieving document: {:?}", err);
                 }
             }
         }
@@ -98,3 +99,12 @@ impl MongoDbConnection {
     }
 }
 
+async fn process_document(mut id_counter: i16, value_doc: Document) -> Result<IData, IError> {
+    let data = IData {
+        id: id_counter,
+        name: value_doc.get("name").unwrap().to_string(),
+        value: value_doc.get("value").unwrap().to_string(),
+    };
+    id_counter += 1;
+    Ok(data)
+}

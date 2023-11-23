@@ -13,5 +13,5 @@ async fn main() {
         dbtype: IDATABASE::Mongodb,
     };
     let conn = SeenConnection::new_connection(&conn_mongodb).await;
-    conn.perform_database_task().await;
+    conn.perform_database_task().await.expect("TODO: panic message");
 }
