@@ -100,6 +100,8 @@ impl MongoDbConnection {
 }
 
 async fn process_document(mut id_counter: i16, value_doc: Document) -> Result<IData, IError> {
+    // U can Customize here for our data ( match db indexes for IDATA)
+    // Add IDATA.rs for indexes
     let data = IData {
         id: id_counter,
         name: value_doc.get("name").unwrap().to_string(),
