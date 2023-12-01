@@ -13,6 +13,7 @@ pub struct SFile {
     file: File,
 }
 // -------------------------------
+//File Manager
 impl SFile {
     pub async fn new(file_name: String) -> Result<SFile> {
         let file = File::create(file_name).await?;
@@ -38,8 +39,13 @@ impl SFile {
         self.file.read(data).await
     }
 }
-
+//---------------------------------------------------------
 impl AuditLogger {
+    pub async fn default() -> Result<AuditLogger> {
+        Ok(AuditLogger {
+            log_file: SFile::new("default_log.txt".to_string()).await?,
+        })
+    }
     pub fn build_logger(file: Result<SFile>) -> Result<AuditLogger> {
         Ok(AuditLogger { log_file:file.unwrap()})
     }
