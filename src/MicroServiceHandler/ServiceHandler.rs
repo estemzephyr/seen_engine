@@ -2,6 +2,7 @@ use crate::stream_module::stream_manager::stream_service;
 use std::thread;
 use crate::db_handler::DB_Manager::SeenConnection;
 use crate::ErrorManager::error_manager::error_service;
+use crate::IDataObj::IData::IData;
 use crate::sharding_engine::shard_manager::shard_service;
 
 
@@ -19,7 +20,7 @@ impl Service {
         Service::Default
     }
 
-    pub async fn create_service_engine(self) -> Service{
+    pub async fn create_service_engine(self) -> Self{
         match self {
             Service::ErrorService(err_serv) => {
                 let error_manager = error_service::ErrorService().await;
@@ -42,7 +43,7 @@ impl Service {
     }
 
     // Opening threads for multithreading
-    pub fn process_data_multithreaded(&self, data: &str) {
+    pub fn process_data_multithreaded(self) {
         match self {
             Service::ErrorService(_) => {
                 let service_thread = thread::spawn(move || {
@@ -51,10 +52,16 @@ impl Service {
                 });
                 service_thread.join().expect("ErrorService thread panicked");
             }
-            Service::DatabaseService(_) => {
+            Service::DatabaseService(serv) => {
                 let service_thread = thread::spawn(move || {
-                    // Add your DatabaseService logic here
+                    tokio::runtime::Runtime::new().unwrap().block_on(async {
+                        let datas = serv.perform_database_task().await.expect("TODO: panic message");
+                        for data in datas {
+                            println!("{:?}", data);
+                        }
+                    });
                 });
+
                 service_thread.join().expect("DatabaseService thread panicked");
             }
             Service::StreamService(_) => {
