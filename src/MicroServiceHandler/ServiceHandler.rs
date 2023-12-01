@@ -1,18 +1,17 @@
+use crate::stream_module::stream_manager::stream_service;
 use std::thread;
 use crate::db_handler::DB_Manager;
-use crate::ErrorManager;
-use crate::ErrorManager::AuditLogger::AuditLogger;
-use crate::ErrorManager::errors::IError;
+use crate::db_handler::DB_Manager::SeenConnection;
+use crate::ErrorManager::error_manager::error_service;
 use crate::sharding_engine::ShardService;
-use crate::stream_module::stream_manager;
 
 // Still building here, I Updating because sometimes i deletes wrongly projects or codes.
 // This is just only Architecture idea.
 pub(crate) enum Service {
     Default,
-    ErrorService(ErrorManager),
-    DatabaseService(DB_Manager),
-    StreamService(stream_manager),
+    ErrorService(error_service),
+    DatabaseService(SeenConnection),
+    StreamService(stream_service),
     ShardService(ShardService),
 }
 
@@ -22,24 +21,18 @@ impl Service {
         Service::Default
     }
 
-    pub async fn create_service_engine(self) -> Service {
+    pub async fn create_service_engine(self) {
         match self {
-            Service::ErrorService(err_service) => {
-                let error_manager = ErrorManager::error_manager::new_error_service(AuditLogger::default(), IError::Default).await;
-                Service::ErrorService(error_manager)
+            Service::ErrorService(err_serv) => {
+                let error_manager = error_service::ErrorService(err_serv);
             }
-            Service::DatabaseService(db_service) => {
-                let seen_connection = DB_Manager::SeenConnection::new_connection(db_service).await;
+            Service::DatabaseService(db_services) => {
+                let seen_connection = SeenConnection::new_connection(db_services).await;
                 Service::DatabaseService(seen_connection)
             }
             Service::StreamService(stream_service) => {
-                let stream_manager = stream_manager::stream_manager(stream_service).await;
-                Service::StreamService(stream_manager)
             }
-            Service::ShardService(sharding_service) => {
-                let shard_engine = ShardService::ShardEngine(sharding_service).await;
-                Service::ShardService(shard_engine)
-            }
+            Service::ShardService(sharding_service) => {}
             _ => Service::Default,
         }
     }
