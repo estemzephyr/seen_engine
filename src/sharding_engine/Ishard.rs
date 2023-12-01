@@ -12,6 +12,38 @@ pub struct IShard{
     pub(crate) id:i32,
     pub(crate) ivalue:Vec<IData>,
 }
+pub struct Shards {
+    id: u32,
+    key: String,
+    shards: Vec<IShard>,
+}
+pub async fn sharding_process(shard:IShard) {
+    let mut shard_vec = Shards::new_shard_vec().await;
+    let mut block_counter = 0;
+    shard_vec.shards.push(shard);
+    for id in 0..=shard_vec.id {
+        if id >= 50 {
+            shard_vec.id = 0;
+            shard_vec.key = format!("Block Number :{}", &block_counter);
+            block_counter += 1;
+        } else {
+            continue;
+        }
+    }
+}
+
+impl Shards {
+    pub async fn new_shard_vec() -> Shards {
+        let mut id_counter = 0;
+        let default_shard = Shards {
+            id: id_counter,
+            key: String::new(),
+            shards: vec![],
+        };
+        id_counter += 1;
+        default_shard
+    }
+}
 
 impl IShard {
     pub fn default() -> IShard {
@@ -26,8 +58,5 @@ impl IShard {
         self.id = *counter;
         *counter += 1;
         IShard {key: self.key, id:self.id, ivalue: Vec::new() }
-    }
-    pub fn get_shards(self) -> IShard {
-        self
     }
 }

@@ -1,3 +1,3 @@
 pub mod IShardController;
-pub mod ShardService;
+pub mod shard_manager;
 pub mod Ishard;
