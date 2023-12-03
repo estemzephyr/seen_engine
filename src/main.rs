@@ -18,5 +18,5 @@ async fn main() {
     };
     let engine = Service::DatabaseService(conn_mongodb);
     let data_service = engine.create_service_engine().await;
-    data_service.process_data_multithreaded().await;
+    data_service.multicore_processor().await;
 }
