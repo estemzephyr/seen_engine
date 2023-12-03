@@ -1,6 +1,5 @@
 use std::str::FromStr;
 use std::time::Duration;
-use futures_util::future::ok;
 use futures_util::StreamExt;
 use mongodb::{options::{ClientOptions, ServerApi, ServerApiVersion}, Client, error::Error as MongoError, Collection, bson};
 use mongodb::bson::{doc, Document};

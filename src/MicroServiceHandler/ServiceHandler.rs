@@ -124,7 +124,6 @@ mod tests {
             // Assert: Check the result
             match result {
                 serv => {
-
                     assert!(true)
                 }
             }
