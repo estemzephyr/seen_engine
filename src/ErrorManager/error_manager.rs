@@ -1,6 +1,5 @@
-use crate::ErrorManager::AuditLogger::AuditLogger;
 use crate::ErrorManager::errors::IError;
-
+#[derive(Debug)]
 pub struct error_service {
     i_error: IError,
 }

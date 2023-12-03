@@ -1,4 +1,5 @@
 use crate::stream_module::stream::IStream;
+#[derive(Debug)]
 pub struct stream_service{
     stream:IStream
 }

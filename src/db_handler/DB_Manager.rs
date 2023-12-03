@@ -3,12 +3,13 @@ use crate::ErrorManager::errors::IError;
 use crate::IDataObj::IData::IData;
 
 #[derive(Clone)]
+#[derive(Debug)]
 pub enum IDATABASE {
     Mysql,
     Postgres,
     Mongodb,
 }
-
+#[derive(Debug)]
 pub struct SeenConnection {
     pub(crate) username: String,
     pub(crate) password: String,
@@ -27,10 +28,10 @@ impl SeenConnection {
         let mut data = IData::create_new_data_vec();
         match self.dbtype {
             IDATABASE::Mysql => {
-                // MySQL ile ilgili işlemleri buraya ekleyin
+                // MySQL is build soon
             }
             IDATABASE::Postgres => {
-                // Postgres ile ilgili işlemleri buraya ekleyin
+                // Postgres is build soon
             }
             IDATABASE::Mongodb => {
                 let mongodb = MongoDbConnection {
@@ -40,16 +41,33 @@ impl SeenConnection {
                 };
                 data = match MongoDbConnection::get_data_from_mongodb(&mongodb).await {
                     Ok(result) => result,
-                    Err(err) => return Err(err.into()), // Hata durumunda geri dön
+                    Err(err) => return Err(err.into()),
                 };
             }
         }
-        //Data Unwrapping for Tests
-        // let unwrapped_data = IData::get_datas_on_vec(data.clone()).await;
-        /*for datas in &data {
-            println!("{:?}",datas);
-        }*/
-
         Ok(data)
     }
 }
+#[cfg(test)]
+mod tests{
+    use crate::db_handler::DB_Manager::{IDATABASE, SeenConnection};
+
+    #[tokio::test]
+    async fn test_perform_database_task_with_mongodb() {
+
+        // Create a SeenConnection with the mock instances
+        let seen_connection = SeenConnection {
+            username: "yusufayd2307".to_string(),
+            password: "00fener00".to_string(),
+            dbtype: IDATABASE::Mongodb,
+        };
+        // Perform the database task and assert the result
+        let result = seen_connection.perform_database_task().await;
+        assert!(result.is_ok());
+        let datas = result.unwrap();
+        for data in datas{
+            println!("{:?}",data)
+        }
+    }
+}
+

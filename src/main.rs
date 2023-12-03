@@ -10,12 +10,13 @@ mod stream_module;
 
 #[tokio::main]
 async fn main() {
+    let services= Service::Default;
     let conn_mongodb = SeenConnection {
         username: "yusufayd2307".to_string(),
         password: "00fener00".to_string(),
         dbtype: IDATABASE::Mongodb,
     };
     let engine = Service::DatabaseService(conn_mongodb);
-    let services = Service::create_service_engine(engine).await;
-    services.process_data_multithreaded();
+    let data_service = engine.create_service_engine().await;
+    data_service.process_data_multithreaded().await;
 }

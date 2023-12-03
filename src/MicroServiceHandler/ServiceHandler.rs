@@ -5,6 +5,7 @@ use crate::ErrorManager::error_manager::error_service;
 use crate::sharding_engine::shard_manager::shard_service;
 
 
+#[derive(Debug)]
 pub(crate) enum Service {
     Default,
     ErrorService(error_service),
@@ -12,13 +13,7 @@ pub(crate) enum Service {
     StreamService(stream_service),
     ShardService(shard_service),
 }
-
 impl Service {
-    // Constructor Block
-    pub fn default() -> Service {
-        Service::Default
-    }
-
     pub async fn create_service_engine(self) -> Self{
         match self {
             Service::ErrorService(err_serv) => {
@@ -37,12 +32,15 @@ impl Service {
                 let shard_engine = shard_service::ShardEngine().await;
                 Service::ShardService(shard_engine)
             }
-            _ => Service::Default,
+            _ => {
+                println!("Unknown Service Type Selected");
+                Service::Default
+            }
         }
     }
 
     // Opening threads for multithreading
-    pub fn process_data_multithreaded(self) {
+    pub async fn process_data_multithreaded(self) {
         match self {
             Service::ErrorService(_) => {
                 let service_thread = thread::spawn(move || {
@@ -55,9 +53,6 @@ impl Service {
                 let service_thread = thread::spawn(move || {
                     tokio::runtime::Runtime::new().unwrap().block_on(async {
                         let datas = serv.perform_database_task().await.expect("TODO: panic message");
-                        for data in datas {
-                            println!("{:?}", data);
-                        }
                     });
                 });
 
@@ -76,6 +71,20 @@ impl Service {
                 service_thread.join().expect("ShardService thread panicked");
             }
             _ => {} // Handle other variants if needed
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests{
+    use crate::MicroServiceHandler::ServiceHandler::Service;
+    #[tokio::test]
+    async fn test_service_engine(){
+        let service = Service::Default;
+        let result =service.create_service_engine().await;
+        match result {
+            Service::Default => assert!(true), // You can customize this based on your logic
+            _ => assert!(false, "Unexpected result: {:?}", result),
         }
     }
 }

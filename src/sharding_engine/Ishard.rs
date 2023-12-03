@@ -6,7 +6,7 @@ lazy_static! {
     static ref ID_COUNTER: Mutex<i32> = Mutex::new(0);
 }
 //Delete After Test
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct IShard{
     pub(crate) key:String,
     pub(crate) id:i32,
