@@ -1,4 +1,5 @@
 #[derive(Clone, Debug)]
+#[derive(PartialEq)]
 pub struct IData {
     pub(crate) id: i16,
     pub(crate) name: String,

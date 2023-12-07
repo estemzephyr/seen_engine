@@ -7,36 +7,16 @@ lazy_static! {
 }
 //Delete After Test
 #[derive(Clone, Debug)]
+#[derive(PartialEq)]
 pub struct IShard {
     pub(crate) key: String,
     pub(crate) id: i32,
-    pub(crate) ivalue: Vec<IData>,
-}
-
-#[derive(Debug)]
-pub struct Shards {
-    id: u32,
-    key: String,
-    shards: Vec<IShard>,
-}
-
-
-impl Shards {
-    pub(crate) async fn new_shard_vec(self) -> Shards {
-        let mut id_counter = 0;
-        let default_shard = Shards {
-            id: id_counter,
-            key: "".to_string(),
-            shards: self.shards,
-        };
-        id_counter += 1;
-        default_shard
-    }
+    pub(crate) ivalue: IData,
 }
 
 // A function to take first char of data
-pub fn take_first_char(data: Vec<IData>) -> char {
-    data.iter().flat_map(|shard| shard.value.chars().next()).next().unwrap_or('x')
+pub fn take_first_char(data: &String) -> char {
+    data.chars().next().unwrap_or('x')
 }
 
 
@@ -45,13 +25,62 @@ impl IShard {
         IShard {
             key: String::new(),
             id: 0,
-            ivalue: vec![],
+            ivalue: IData::default(),
         }
     }
     pub async fn new_shard(mut self) -> Self {
         let mut counter = ID_COUNTER.lock().unwrap();
         self.id = *counter;
         *counter += 1;
-        IShard { key: self.key, id: self.id, ivalue: Vec::new() }
+        IShard { key: self.key, id: self.id, ivalue: IData::default() }
+    }
+    pub async fn process_shards(data: Vec<IData>) -> Vec<IShard> {
+        let mut shards = Vec::new();
+
+        for datas in data {
+            let first_char = take_first_char(&datas.value);
+            let shard = IShard {
+                key: format!("Key_{}", first_char),
+                id: 0,  // Buraya ID ataması yapabilirsin, şu an için sabit 0 kaldı
+                ivalue: datas.clone(), // IData'nin sahibi olmayan bir kopyasını oluşturuyoruz
+            };
+
+            shards.push(shard);
+        }
+        shards
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::IDataObj::IData::IData;
+    use crate::sharding_engine::Ishard::IShard;
+
+    #[tokio::test]
+    async fn test_shard_processor() {
+        // Example Data
+        let data1 = IData { id: 0, name: "".to_string(), value: "abc".to_string() };
+        let data2 = IData { id: 0, name: "".to_string(), value: "def".to_string() };
+        let data3 = IData { id: 0, name: "".to_string(), value: "ghi".to_string() };
+
+        // Collection
+        let data_vector = vec![data1, data2, data3];
+
+        // Calling function
+        let result = IShard::process_shards(data_vector).await;
+
+        // Expected Result
+        let expected_output = vec![
+            IShard { key: "Key_a".to_string(), id: 0, ivalue: IData { id: 0, name: "".to_string(), value: "abc".to_string() } },
+            IShard { key: "Key_d".to_string(), id: 0, ivalue: IData { id: 0, name: "".to_string(), value: "def".to_string() } },
+            IShard { key: "Key_g".to_string(), id: 0, ivalue: IData { id: 0, name: "".to_string(), value: "ghi".to_string() } },
+        ];
+
+        // Result
+        assert_eq!(result, expected_output);
+
+        for shard in &result {
+            println!("{:?}", shard);
+        }
     }
 }

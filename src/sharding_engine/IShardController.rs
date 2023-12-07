@@ -1,7 +1,4 @@
-use std::cmp::Ordering;
 use crate::IDataObj::IData::IData;
-use crate::sharding_engine::Ishard::{IShard, Shards};
-
 const ALPHABET: &str = "abcdefghijklmnopqrstuvwxyz";
 
 pub enum ControlProtocol {
@@ -11,14 +8,12 @@ pub enum ControlProtocol {
     Shuffled,
 }
 
-/*impl ControlProtocol {
+impl ControlProtocol {
     pub fn default() -> ControlProtocol {
         ControlProtocol::Default
     }
 
-    pub async fn list_shard_with_algorithm_and_insert(self,shards: Vec<IShard>) -> Shards {
-        let mut shard = IShard::default();
-
+    pub async fn list_shard_with_algorithm_and_insert(self){
         match self {
             ControlProtocol::Alphabetic => {
 
@@ -31,30 +26,22 @@ pub enum ControlProtocol {
 
                 // Memory Loading with threads
 
-
-                let s = Shards::default();
-                Shards::new_shard_vec(s).await
             }
 
                 ControlProtocol::Default => {
                     // Handle the default case here if needed
-                    let s = Shards::default();
-                    Shards::new_shard_vec(s).await
+
                 }
                 ControlProtocol::MostView => {
                     // Handle MostView case
-                    let s = Shards::default();
-                    Shards::new_shard_vec(s).await
+
                 }
                 ControlProtocol::Shuffled => {
                     // Handle Shuffled case
-                    let s = Shards::default();
-                    Shards::new_shard_vec(s).await
                 }
             }
         }
     }
-*/
 #[cfg(test)]
 mod tests {
     use crate::sharding_engine::Ishard::take_first_char;
@@ -67,9 +54,9 @@ mod tests {
             name: "Car".to_string(),
             value: "Mustang".to_string(),
         };
-        let first_char = take_first_char(vec![]);
+        let first_char = take_first_char(&data.value);
         println!("{:?}",first_char);
-        let _shards = ControlProtocol::list_shard_with_algorithm_and_insert(ControlProtocol::Alphabetic, data).await;
-        println!("{:?}",_shards)
+     /*   let _shards = ControlProtocol::list_shard_with_algorithm_and_insert(ControlProtocol::Alphabetic, data).await;
+        println!("{:?}",_shards)*/
     }
 }
