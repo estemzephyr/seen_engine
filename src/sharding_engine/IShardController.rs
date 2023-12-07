@@ -10,17 +10,13 @@ pub enum ControlProtocol {
     MostView,
     Shuffled,
 }
-// A function to take first char of data
-pub fn take_first_char(data: &Vec<IData>) -> char {
-    data.iter().flat_map(|shard| shard.value.chars().next()).next().unwrap_or('x')
-}
 
-impl ControlProtocol {
+/*impl ControlProtocol {
     pub fn default() -> ControlProtocol {
         ControlProtocol::Default
     }
 
-    pub async fn list_shard_with_algorithm_and_insert(self, mut shards: Vec<IShard>) -> Shards {
+    pub async fn list_shard_with_algorithm_and_insert(self,shards: Vec<IShard>) -> Shards {
         let mut shard = IShard::default();
 
         match self {
@@ -58,9 +54,10 @@ impl ControlProtocol {
             }
         }
     }
-
+*/
 #[cfg(test)]
 mod tests {
+    use crate::sharding_engine::Ishard::take_first_char;
     use super::*;
 
     #[tokio::test]
@@ -70,9 +67,9 @@ mod tests {
             name: "Car".to_string(),
             value: "Mustang".to_string(),
         };
-        //let first_char = take_first_char();
-        //println!("{:?}",first_char)
-        //let _shards = ControlProtocol::list_shard_with_algorithm_and_insert(ControlProtocol::Alphabetic, data).await;
-        //println!("{:?}",_shards)
+        let first_char = take_first_char(vec![]);
+        println!("{:?}",first_char);
+        let _shards = ControlProtocol::list_shard_with_algorithm_and_insert(ControlProtocol::Alphabetic, data).await;
+        println!("{:?}",_shards)
     }
 }

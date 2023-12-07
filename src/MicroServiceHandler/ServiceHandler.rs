@@ -41,11 +41,11 @@ impl Service {
     }
 
     // Opening threads for multithreading
-    pub async fn multicore_processor(self) {
+    pub async fn multicore_processor(self){
         match self {
-            Service::ErrorService(_) => {
+            Service::ErrorService(err) => {
                 let service_task = task::spawn(async {
-                    // Add your ErrorService logic here
+                    Service::ErrorService(err)
                 });
 
                 service_task.await.expect("ErrorService task panicked");
@@ -53,30 +53,31 @@ impl Service {
             Service::DatabaseService(serv) => {
                 let service_thread = thread::spawn(move || {
                     tokio::runtime::Runtime::new().unwrap().block_on(async {
-                        serv
+                        // Add your DatabaseService logic here
+                        Service::DatabaseService(serv)
                     });
                 });
                 service_thread.join().expect("DatabaseService task panicked");
             }
-            Service::StreamService(_) => {
+            Service::StreamService(stream) => {
                 let service_task = task::spawn(async {
-                    // Add your StreamService logic here
+                    Service::StreamService(stream)
                 });
 
                 service_task.await.expect("StreamService task panicked");
             }
-            Service::ShardService(_) => {
+            Service::ShardService(shard) => {
                 let service_task = task::spawn(async {
-                    // Add your ShardService logic here
+                    Service::ShardService(shard)
                 });
-
                 service_task.await.expect("ShardService task panicked");
             }
-            _ => {} // Handle other variants if needed
+            _ => {
+                println!("Error")
+            }
         }
     }
 }
-
 #[cfg(test)]
 mod tests {
     use crate::db_handler::DB_Manager::{IDATABASE, SeenConnection};
@@ -97,6 +98,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_multicore_processor() {
+
         // Connection
         let conn = SeenConnection {
             username: "".to_string(),

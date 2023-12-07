@@ -22,37 +22,36 @@ pub struct Shards {
 
 
 impl Shards {
-    //Constructor block
-    pub(crate) fn default() -> Shards{
-        Shards{
-            id: 0,
-            key: "".to_string(),
-            shards: vec![],
-        }
-    }
     pub(crate) async fn new_shard_vec(self) -> Shards {
         let mut id_counter = 0;
         let default_shard = Shards {
             id: id_counter,
-            key: String::new(),
+            key: "".to_string(),
             shards: self.shards,
         };
         id_counter += 1;
         default_shard
     }
     pub async fn sharding_process(_shard: Vec<IShard>, key: char) {
-        //Shadowing for security:Value mutable for working lifetime , after process value isn't mutable.
-
-        //Note: 'key' define in IShardController.rs
-        let mut _shard = _shard;
+        let mut id_counter = 0;
+        let mut shard_vec = Shards {
+            id: id_counter,
+            key: "".to_string(),
+            shards: vec![],
+        };
         for mut value in _shard {
-            if value.id >= 100{
+            if value.id >= 100 {
                 value.id = 0;
-            }else { continue }
-            _shard.push(value)
+                value.key = String::from(take_first_char(value.ivalue))
+            }
         }
     }
 }
+// A function to take first char of data
+pub fn take_first_char(data: Vec<IData>) -> char {
+    data.iter().flat_map(|shard| shard.value.chars().next()).next().unwrap_or('x')
+}
+
 
 impl IShard {
     pub fn default() -> IShard {
