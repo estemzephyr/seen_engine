@@ -1,4 +1,4 @@
-use crate::ErrorManager::errors::IError;
+use crate::L_Business::ErrorManager::errors::IError;
 #[derive(Debug)]
 pub struct error_service {
     i_error: IError,

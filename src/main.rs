@@ -1,12 +1,8 @@
-use crate::db_handler::DB_Manager::{IDATABASE, SeenConnection};
-use crate::MicroServiceHandler::ServiceHandler::Service;
-
-mod MicroServiceHandler;
-mod db_handler;
-mod ErrorManager;
-mod IDataObj;
-mod sharding_engine;
-mod stream_module;
+use crate::L_Data::db_handler::DB_Manager::{IDATABASE, SeenConnection};
+use crate::L_Business::MicroServiceHandler::ServiceHandler::Service;
+mod L_Data;
+mod L_Business;
+mod L_Presentation;
 
 #[tokio::main]
 async fn main() {

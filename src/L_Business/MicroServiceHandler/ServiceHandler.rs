@@ -1,8 +1,8 @@
-use crate::stream_module::stream_manager::stream_service;
+use crate::L_Presentation::stream_module::stream_manager::stream_service;
 use std::thread;
-use crate::db_handler::DB_Manager::SeenConnection;
-use crate::ErrorManager::error_manager::error_service;
-use crate::sharding_engine::shard_manager::shard_service;
+use crate::L_Data::db_handler::DB_Manager::SeenConnection;
+use crate::L_Business::ErrorManager::error_manager::error_service;
+use crate::L_Data::sharding_engine::shard_manager::shard_service;
 use tokio::task;
 
 #[derive(Debug)]
@@ -80,11 +80,11 @@ impl Service {
 }
 #[cfg(test)]
 mod tests {
-    use crate::db_handler::DB_Manager::{IDATABASE, SeenConnection};
-    use crate::ErrorManager::error_manager::error_service;
-    use crate::MicroServiceHandler::ServiceHandler::Service;
-    use crate::sharding_engine::shard_manager::shard_service;
-    use crate::stream_module::stream_manager::stream_service;
+    use crate::L_Data::db_handler::DB_Manager::{IDATABASE, SeenConnection};
+    use crate::L_Business::ErrorManager::error_manager::error_service;
+    use crate::L_Business::MicroServiceHandler::ServiceHandler::Service;
+    use crate::L_Data::sharding_engine::shard_manager::shard_service;
+    use crate::L_Presentation::stream_module::stream_manager::stream_service;
 
     #[tokio::test]
     async fn test_service_engine() {
