@@ -32,21 +32,8 @@ impl Shards {
         id_counter += 1;
         default_shard
     }
-    pub async fn sharding_process(_shard: Vec<IShard>, key: char) {
-        let mut id_counter = 0;
-        let mut shard_vec = Shards {
-            id: id_counter,
-            key: "".to_string(),
-            shards: vec![],
-        };
-        for mut value in _shard {
-            if value.id >= 100 {
-                value.id = 0;
-                value.key = String::from(take_first_char(value.ivalue))
-            }
-        }
-    }
 }
+
 // A function to take first char of data
 pub fn take_first_char(data: Vec<IData>) -> char {
     data.iter().flat_map(|shard| shard.value.chars().next()).next().unwrap_or('x')
