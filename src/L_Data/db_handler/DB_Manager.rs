@@ -17,11 +17,11 @@ pub struct SeenConnection {
 }
 
 impl SeenConnection {
-    pub async fn new_connection(self) -> SeenConnection {
+    pub async fn new_connection(&self) -> SeenConnection {
         SeenConnection {
-            username: self.username,
-            password: self.password,
-            dbtype: self.dbtype,
+            username: self.username.clone(),
+            password: self.password.clone(),
+            dbtype: self.dbtype.clone(),
         }
     }
     pub async fn perform_database_task(&self) -> Result<Vec<IData>, IError> {

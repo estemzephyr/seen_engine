@@ -7,7 +7,7 @@ use tokio::task;
 
 #[derive(Debug)]
 pub(crate) enum Service {
-    Default,
+    Default, // constructor type
     ErrorService(error_service),
     DatabaseService(SeenConnection),
     StreamService(stream_service),
@@ -15,6 +15,7 @@ pub(crate) enum Service {
 }
 
 impl Service {
+    //Note : Referencing self to lifecycle continue
     pub async fn create_service_engine(self) -> Self {
         match self {
             Service::ErrorService(err_serv) => {
@@ -22,7 +23,7 @@ impl Service {
                 Service::ErrorService(error_manager)
             }
             Service::DatabaseService(db_services) => {
-                let connection = SeenConnection::new_connection(db_services).await;
+                let connection = SeenConnection::new_connection(&db_services).await;
                 Service::DatabaseService(connection)
             }
             Service::StreamService(stream_service) => {
@@ -78,6 +79,7 @@ impl Service {
         }
     }
 }
+
 #[cfg(test)]
 mod tests {
     use crate::L_Data::db_handler::DB_Manager::{IDATABASE, SeenConnection};
@@ -121,7 +123,7 @@ mod tests {
         // Service Tests
         for service_test in services {
             // Act: Call the multicore_processor method
-            println!("testing : {:?}",service_test);
+            println!("testing : {:?}", service_test);
             let result = service_test.multicore_processor().await;
             // Assert: Check the result
             match result {
