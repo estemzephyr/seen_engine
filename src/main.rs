@@ -30,5 +30,8 @@ async fn main() {
         socketaddr: "127.0.0.1".to_string(),
         port: "8080".to_string(),
     };
-    local_server::start_server(&server, IRequest::Get).await.expect("Server Error");
+
+    server.start_server().await.expect("Server Start Error");
+    WServer::handle_get_req(&server, IRequest::Get).await;
+
 }
