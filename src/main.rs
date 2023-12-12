@@ -3,7 +3,7 @@ use crate::L_Data::db_handler::DB_Manager::{IDATABASE, SeenConnection};
 use crate::L_Business::MicroServiceHandler::ServiceHandler::Service;
 use crate::L_Data::sharding_engine::shard_manager::shard_service;
 use crate::L_Presentation::stream_module::stream_manager::stream_service;
-use crate::L_Presentation::webserver::wserver::local_server;
+use crate::L_Presentation::webserver::wserver::{IRequest, local_server, WServer};
 
 mod L_Data;
 mod L_Business;
@@ -26,9 +26,9 @@ async fn main() {
     let err_engine = Service::create_service_engine(Service::ErrorService(err_service)).await;
     let shard_engine = Service::create_service_engine(Service::ShardService(shard_serv)).await;
 
-    let server = local_server::WServer {
+    let server = WServer {
         socketaddr: "127.0.0.1".to_string(),
         port: "8080".to_string(),
     };
-    local_server::start_server(&server).await.expect("Server Error");
+    local_server::start_server(&server, IRequest::Get).await.expect("Server Error");
 }
