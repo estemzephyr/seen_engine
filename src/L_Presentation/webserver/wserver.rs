@@ -4,7 +4,7 @@ use crate::L_Presentation::webserver::wserver::local_server::index;
 pub enum IRequest {
     Get,
 }
-
+#[derive(Debug)]
 pub struct WServer {
     pub socketaddr: String,
     pub port: String,

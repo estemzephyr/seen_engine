@@ -4,6 +4,7 @@ use crate::L_Data::db_handler::DB_Manager::SeenConnection;
 use crate::L_Business::ErrorManager::error_manager::error_service;
 use crate::L_Data::sharding_engine::shard_manager::shard_service;
 use tokio::task;
+use crate::L_Presentation::webserver::ServerEngine::server_service;
 
 #[derive(Debug)]
 pub(crate) enum Service {
@@ -12,6 +13,7 @@ pub(crate) enum Service {
     DatabaseService(SeenConnection),
     StreamService(stream_service),
     ShardService(shard_service),
+    ServerService(server_service)
 }
 
 impl Service {
@@ -33,6 +35,10 @@ impl Service {
             Service::ShardService(sharding_service) => {
                 let shard_engine = shard_service::ShardEngine().await;
                 Service::ShardService(shard_engine)
+            }
+            Service::ServerService(server) => {
+                let server_engine = server_service::create_new_server();
+                Service::ServerService(server_engine)
             }
             _ => {
                 println!("Unknown Service Type Selected");
@@ -72,6 +78,10 @@ impl Service {
                     Service::ShardService(shard)
                 });
                 service_task.await.expect("ShardService task panicked");
+            }
+            Service::ServerService(server) => {
+                let service_task =task::spawn(async { Service::ServerService(server) });
+                service_task.await.expect("Server Service panicked");
             }
             _ => {
                 println!("Error")

@@ -1,11 +1,12 @@
-#[derive(Clone, Debug)]
+use serde_derive::{Deserialize, Serialize};
+
+#[derive(Clone, Debug,Serialize,Deserialize)]
 #[derive(PartialEq)]
 pub struct IData {
     pub(crate) id: i16,
     pub(crate) name: String,
     pub(crate) value: String,
 }
-
 impl IData {
     //Constructor
     pub fn default() -> IData {
