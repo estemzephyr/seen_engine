@@ -1,2 +1,2 @@
 pub mod ErrorManager;
-pub mod MicroServiceHandler;
+pub mod Logger;
