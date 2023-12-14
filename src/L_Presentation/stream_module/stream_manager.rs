@@ -3,7 +3,7 @@ use tokio::sync::mpsc;
 
 #[derive(Debug)]
 pub struct stream_service {
-    stream: IStream,
+    pub(crate) stream: IStream,
 }
 
 impl stream_service {

@@ -3,6 +3,7 @@
     <option name="myName" value="Project Default" />
     <inspection_tool class="RsArgumentNaming" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RsEnumNaming" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="RsFieldNaming" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RsFunctionNaming" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RsLiveness" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RsMethodNaming" enabled="false" level="WARNING" enabled_by_default="false" />
