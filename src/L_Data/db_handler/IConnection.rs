@@ -25,7 +25,7 @@ impl SeenConnection {
         }
     }
     pub async fn perform_database_task(&self) -> Result<Vec<IData>, IError> {
-        let mut data = IData::create_new_data_vec();
+        let mut datas = IData::create_new_data_vec();
         match self.dbtype {
             IDATABASE::Mysql => {
                 // MySQL is build soon
@@ -39,13 +39,13 @@ impl SeenConnection {
                     username: self.username.clone(),
                     password: self.password.clone(),
                 };
-                data = match MongoDbConnection::get_data_from_mongodb(&mongodb).await {
+                datas = match MongoDbConnection::get_data_from_mongodb(&mongodb).await {
                     Ok(result) => result,
                     Err(err) => return Err(err.into()),
                 };
             }
         }
-        Ok(data)
+        Ok(datas)
     }
 }
 #[cfg(test)]
