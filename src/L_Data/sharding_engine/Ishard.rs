@@ -34,6 +34,7 @@ impl IShard {
         *counter += 1;
         IShard { key: self.key, id: self.id, ivalue: IData::default() }
     }
+}/*
     pub async fn process_shards(data: Vec<IData>) -> Vec<IShard> {
         let mut shards = Vec::new();
 
@@ -41,7 +42,7 @@ impl IShard {
             let first_char = take_first_char(&datas.value);
             let shard = IShard {
                 key: format!("Key_{}", first_char),
-                id: 0,  // Buraya ID ataması yapabilirsin, şu an için sabit 0 kaldı
+                id: 0,
                 ivalue: datas.clone(), // IData'nin sahibi olmayan bir kopyasını oluşturuyoruz
             };
 
@@ -84,3 +85,4 @@ mod tests {
         }
     }
 }
+*/

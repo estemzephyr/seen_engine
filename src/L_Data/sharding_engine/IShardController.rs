@@ -1,5 +1,6 @@
+use std::vec;
 use crate::L_Data::IDataObj::IData::IData;
-const ALPHABET: &str = "abcdefghijklmnopqrstuvwxyz";
+use crate::L_Data::sharding_engine::Ishard::{IShard, take_first_char};
 
 pub enum ControlProtocol {
     Default,
@@ -13,38 +14,39 @@ impl ControlProtocol {
         ControlProtocol::Default
     }
 
-    pub async fn list_shard_with_algorithm_and_insert(self){
+    pub async fn list_shard_with_algorithm_and_insert(self, shards: Vec<IShard>) -> Vec<IShard> {
         match self {
             ControlProtocol::Alphabetic => {
-
-                //TODO
-                // Call the threads for data processing in lifetime to map
-                // Overload the memory to take data lifetimes.
-                // Process the data's and list with algorithm and send ShardService
-
-
-
-                // Memory Loading with threads
-
+                let mut _shards: Vec<IShard> = vec![];
+                let mut def_shard = IShard::default();
+                for datas in shards {
+                    let first_char = take_first_char(&datas.ivalue.value);
+                    def_shard.key = format!("Key:{}", first_char);
+                    def_shard.ivalue = datas.ivalue;
+                    _shards.push(def_shard.clone());
+                }
+                _shards.sort_by_key(|shard| shard.key.clone());
+                _shards
             }
-
-                ControlProtocol::Default => {
-                    // Handle the default case here if needed
-
-                }
-                ControlProtocol::MostView => {
-                    // Handle MostView case
-
-                }
-                ControlProtocol::Shuffled => {
-                    // Handle Shuffled case
-                }
+            /*
+            ControlProtocol::Default => {
+                // Handle the default case here if needed
+            }
+            ControlProtocol::MostView => {
+                // Handle MostView case
+            }
+            ControlProtocol::Shuffled => {
+                // Handle Shuffled case
+            }*/
+            _ => {
+                shards
             }
         }
     }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::L_Data::sharding_engine::Ishard::take_first_char;
     use super::*;
 
     #[tokio::test]
@@ -54,9 +56,31 @@ mod tests {
             name: "Car".to_string(),
             value: "Mustang".to_string(),
         };
-        let first_char = take_first_char(&data.value);
-        println!("{:?}",first_char);
-     /*   let _shards = ControlProtocol::list_shard_with_algorithm_and_insert(ControlProtocol::Alphabetic, data).await;
-        println!("{:?}",_shards)*/
+        let data1 = IData {
+            id: 1,
+            name: "Car".to_string(),
+            value: "HellCat".to_string(),
+        };
+        let shard = IShard {
+            key: "".to_string(),
+            id: 0,
+            ivalue: data,
+        };
+        let shard1 = IShard {
+            key: "".to_string(),
+            id: 0,
+            ivalue: data1,
+        };
+
+        let mut shards = vec![];
+        shards.push(shard);
+        shards.push(shard1);
+        let _shards = ControlProtocol::Alphabetic.list_shard_with_algorithm_and_insert(shards)
+            .await;
+
+        // Add assertions or println statements to check the results
+        for s in _shards {
+            println!("{:?}", s);
+        }
     }
 }
