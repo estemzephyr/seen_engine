@@ -1,2 +1,3 @@
 pub mod microservicecontroller;
-pub mod Services;
+pub(crate) mod DatabaseService;
+pub mod StreamService;

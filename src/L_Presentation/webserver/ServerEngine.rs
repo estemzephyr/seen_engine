@@ -1,5 +1,5 @@
 use crate::L_Presentation::webserver::wserver::{IRequest, WServer};
-use crate::MicroServiceHandler::Services::IService;
+use crate::MicroServiceHandler::StreamService::StreamServiceEngine;
 
 #[derive(Debug)]
 pub struct server_service{
@@ -14,7 +14,7 @@ impl server_service{
             server: WServer { socketaddr: "".to_string(), port: "".to_string() },
         }
     }
-    pub async fn process_req(request: IRequest, engine: &IService,stream_service: IService) {
+    pub async fn process_req(request: IRequest, /*engine:ServerService*/stream_service: Box<dyn StreamServiceEngine>) {
         // Server Defined Local If want to connect use method WServer::connect_server()
         let server = WServer { socketaddr: "127.0.0.1".to_string(), port: "8080".to_string() };
 

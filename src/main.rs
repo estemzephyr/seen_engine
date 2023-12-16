@@ -13,7 +13,8 @@ mod app {
     use crate::L_Presentation::webserver::ServerEngine::server_service;
     use crate::L_Data::db_handler::IConnection::SeenConnection;
     use crate::L_Data::db_handler::IConnection::IDATABASE;
-    use crate::MicroServiceHandler::microservicecontroller::DatabaseServiceEngine;
+    use crate::MicroServiceHandler::DatabaseService::DatabaseServiceEngine;
+    use crate::MicroServiceHandler::StreamService::StreamServiceEngine;
     //-----------------------------------------------------------------------
 
     pub async fn app_run() {
@@ -29,6 +30,8 @@ mod app {
         let shard_serv = shard_service::ShardEngine().await;
         //--------------------------------------------
         db_service.start_service().await;
+        stream.start().await;
+        DatabaseServiceEngine::start_service(&db_service).await;
         let datas = db_service.get_data().await;
         for data in datas {
             println!("data:{:?}",data)
