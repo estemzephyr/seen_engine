@@ -16,8 +16,12 @@ impl DatabaseServiceEngine for database_service {
     }
 
     async fn get_data(&self) -> Vec<IData> {
-        let datas = self.connection.perform_database_task().await.expect("TODO: panic message");
-        datas
+        let mut data_vec = IData::create_new_data_vec();
+        let datas =self.connection.perform_database_task().await;
+        for data in datas.unwrap(){
+            data_vec.push(data)
+        }
+        data_vec
     }
 }
 #[cfg(test)]

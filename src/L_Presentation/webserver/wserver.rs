@@ -19,7 +19,7 @@ pub mod local_server {
 }
 impl WServer{
 
-    pub async fn start_server(&self) -> std::io::Result<()> {
+    pub async fn start_local_server(&self) -> std::io::Result<()> {
         let h_server = HttpServer::new(move || {
             App::new().service(index)
         })

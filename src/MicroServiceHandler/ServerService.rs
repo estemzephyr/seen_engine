@@ -3,31 +3,31 @@ use async_trait::async_trait;
 use crate::L_Data::IDataObj::IData::IData;
 use crate::L_Presentation::stream_module::stream_manager::stream_service;
 use crate::L_Presentation::webserver::server_manager::server_service;
-use crate::L_Presentation::webserver::wserver::{IRequest, WServer};
+use crate::L_Presentation::webserver::wserver::{IRequest};
 
 #[async_trait]
 pub trait ServerServiceEngine {
-    async fn start_server(&self) -> &WServer;
-    async fn process_req(request: IRequest, engine: server_service, stream_service: stream_service) -> Option<IData>;
+    async fn start_server(&self);
+    async fn process_req(request: IRequest, stream_service: stream_service) -> Option<IData>;
 }
 
 #[async_trait]
 impl ServerServiceEngine for server_service {
-    async fn start_server(&self) -> &WServer {
-        &self.server
+    async fn start_server(&self){
+        &self.server;
     }
-    async fn process_req(request: IRequest, engine: server_service, mut stream_service: stream_service) -> Option<IData> {
-        // Server Defined Local If want to connect use method WServer::connect_server()
-        engine.connect_server();
+    async fn process_req(request: IRequest, mut stream_service: stream_service) -> Option<IData> {
         match request {
             IRequest::Get => {
-                    if let Some(data) = stream_service.stream.receiver.recv().await {
-                    println!("data on stream: {:?}", data);
-                    Some(data)
-                } else {
-                    println!("No data received on stream");
-                    None
+                // Veri almak için bir loop oluştur
+                while let Some(datas) = stream_service.stream.receiver.recv().await {
+                    println!("On Stream data is: {:?}", datas);
+
+                    // Process value and send server , but i not have any real server
                 }
+
+                // Option type
+                None
             }
         }
     }
