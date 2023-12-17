@@ -1,2 +1,11 @@
 Some Variables like IShard;
 built in same place with struct modules. not defined in Shard_manager for application security.
+
+For Real Project:
+-- Need subfunctions to optimize like delete for loops and define functions to return values in vecs
+-- use threads to multiple processes
+-- need task::spawn and control the Services for dynamic work
+
+That project will going bigger and i havent time , I spended this project for 35 days and everyday 2-4 hours.
+I finished architecture and project was finished for me ,
+i just write this project to add my cv and will show after i take a junior for teach.
