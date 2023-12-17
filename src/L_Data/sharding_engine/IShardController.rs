@@ -17,13 +17,16 @@ impl ControlProtocol {
     pub async fn list_shard_with_algorithm_and_insert(self, shards: Vec<IShard>) -> Vec<IShard> {
         match self {
             ControlProtocol::Alphabetic => {
+                let mut id_counter = 0;
                 let mut _shards: Vec<IShard> = vec![];
                 let mut def_shard = IShard::default();
                 for datas in shards {
                     let first_char = take_first_char(&datas.ivalue.value);
                     def_shard.key = format!("Key:{}", first_char);
+                    def_shard.id = id_counter;
                     def_shard.ivalue = datas.ivalue;
                     _shards.push(def_shard.clone());
+                    id_counter+=1;
                 }
                 _shards.sort_by_key(|shard| shard.key.clone());
                 _shards

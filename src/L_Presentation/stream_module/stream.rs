@@ -40,7 +40,6 @@ mod tests {
     use tokio::time::timeout;
     use crate::L_Data::IDataObj::IData::IData;
     use super::IStream;
-        // I DONT KNOW WHAT I AM DOING BUT ITS WORKING XD
     #[tokio::test]
     async fn test_i_stream() {
         // Create a new IStream

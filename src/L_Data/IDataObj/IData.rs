@@ -1,7 +1,7 @@
-use serde_derive::{Deserialize, Serialize};
+use std::fmt::Display;
 
-#[derive(Clone, Debug,Serialize,Deserialize)]
-#[derive(PartialEq)]
+
+#[derive(PartialEq,Clone,Debug)]
 pub struct IData {
     pub(crate) id: i16,
     pub(crate) name: String,
