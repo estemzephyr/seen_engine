@@ -19,13 +19,14 @@ impl ControlProtocol {
             ControlProtocol::Alphabetic => {
                 let mut id_counter = 0;
                 let mut _shards: Vec<IShard> = vec![];
-                let mut def_shard = IShard::default();
                 for datas in shards {
                     let first_char = take_first_char(&datas.ivalue.value);
-                    def_shard.key = format!("Key:{}", first_char);
-                    def_shard.id = id_counter;
-                    def_shard.ivalue = datas.ivalue;
-                    _shards.push(def_shard.clone());
+                    let shard_new = IShard{
+                        key: format!("Key:{}", first_char),
+                        id: 0,
+                        ivalue: datas.ivalue,
+                    };
+                    _shards.push(shard_new);
                     id_counter+=1;
                 }
                 _shards.sort_by_key(|shard| shard.key.clone());

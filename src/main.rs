@@ -50,7 +50,7 @@ mod app {
             shard.ivalue = data;
             shard_vec.push(shard.clone())
         };
-        let listed_shards = ControlProtocol::list_shard_with_algorithm_and_insert(ControlProtocol::Alphabetic, shard_vec).await;
+        let listed_shards = shard_serv.list_with_algorithm(shard_vec).await;
         StreamServiceEngine::send_datas(&mut stream, listed_shards).await;
         server_service::process_req(IRequest::Get, stream).await;
     }

@@ -82,7 +82,8 @@ impl MongoDbConnection {
             match result {
                 Ok(value_doc) => {
                     match process_document(id_counter, value_doc).await {
-                        Ok(processed_data) => {
+                        Ok(mut processed_data) => {
+                            processed_data.clean_up_values().await;
                             data.push(processed_data);
                         }
                         Err(err) => {
